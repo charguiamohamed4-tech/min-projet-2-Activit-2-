@@ -22,7 +22,7 @@ Le projet a été **simplifié** pour rester au niveau du cours « WEB AVANCE »
 | Fichier | Rôle | Taille |
 |---|---|---|
 | `index.html` | les 5 parties et la fenêtre du profil | 206 lignes |
-| `style.css` | thème clair/sombre (variables CSS), animations, carte 3D | 305 lignes |
+| `style.css` | thème clair/sombre (variables CSS), animations, carte 3D | 282 lignes |
 | `script.js` | tout le JavaScript, en 8 blocs commentés | 361 lignes |
 | `assets/images/*.svg` | les 6 images du Drag & Drop (avec leur nom) | 6 fichiers |
 | `README.md` | présentation et données enregistrées | — |

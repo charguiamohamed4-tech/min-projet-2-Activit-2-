@@ -1,19 +1,18 @@
 /* ===== Cap sur l'Espace — feuille de style ===== */
 
-/* ----- Variables CSS : thème sombre par défaut ----- */
+/* Variables CSS : couleurs du thème sombre (par défaut) */
 :root {
   --fond: #0b1033;
-  --texte: #ffffff;
+  --texte: white;
   --carte: #1b2150;
   --accent: #7c5cff;
 }
 
-/* Thème clair : on redéfinit les variables quand le body a la classe "clair" */
+/* Thème clair : la classe "clair" est ajoutée au body en JavaScript */
 body.clair {
   --fond: #e8ecff;
   --texte: #12163a;
-  --carte: #ffffff;
-  --accent: #4f46e5;
+  --carte: white;
 }
 
 body {
@@ -21,10 +20,9 @@ body {
   font-family: Arial, sans-serif;
   background-color: var(--fond);
   color: var(--texte);
-  transition: background-color 0.5s, color 0.5s;
 }
 
-/* Classe utilisée pour cacher un élément */
+/* Pour cacher un élément */
 .cache {
   display: none;
 }
@@ -37,19 +35,17 @@ button {
   padding: 8px 14px;
   margin: 3px;
   cursor: pointer;
-  transition: transform 0.2s;
 }
 
 button:hover {
-  transform: scale(1.05);
+  background-color: #5a3fd6;
 }
 
 button:disabled {
   opacity: 0.3;
-  cursor: not-allowed;
 }
 
-/* ----- En-tête ----- */
+/* ----- En-tête, contenu, pied de page ----- */
 header {
   display: flex;
   flex-wrap: wrap;
@@ -61,7 +57,6 @@ header {
 
 header h1 {
   font-size: 22px;
-  margin: 5px 0;
 }
 
 main {
@@ -73,7 +68,6 @@ main {
 footer {
   text-align: center;
   padding: 20px;
-  font-size: 13px;
 }
 
 /* ----- 1. Accueil ----- */
@@ -87,41 +81,41 @@ footer {
 }
 
 @keyframes neon {
-  from { text-shadow: 0 0 5px #00e5ff; }
-  to   { text-shadow: 0 0 10px #00e5ff, 0 0 25px #00e5ff, 0 0 50px #00e5ff; }
+  from { text-shadow: 0 0 5px cyan; }
+  to   { text-shadow: 0 0 20px cyan, 0 0 40px cyan; }
 }
 
-/* Système solaire animé */
+/* Système solaire : le soleil au centre, 3 orbites qui tournent */
 .systeme {
   position: relative;
   width: 300px;
   height: 300px;
   margin: 20px auto;
-  background: radial-gradient(circle, #2b1c70, #070b27);
   border-radius: 50%;
+  background-color: #070b27;
 }
 
 .soleil {
   position: absolute;
-  width: 50px;
-  height: 50px;
   top: 125px;
   left: 125px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: radial-gradient(circle, yellow, orange);
+  background-color: orange;
   box-shadow: 0 0 30px orange;
 }
 
 .orbite {
   position: absolute;
-  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border: 1px dashed gray;
   border-radius: 50%;
-  animation: tourner linear infinite;
+  animation: tourner 10s linear infinite;
 }
 
-.orbite1 { width: 120px; height: 120px; top: 90px; left: 90px; animation-duration: 5s; }
-.orbite2 { width: 190px; height: 190px; top: 55px; left: 55px; animation-duration: 9s; }
-.orbite3 { width: 270px; height: 270px; top: 15px; left: 15px; animation-duration: 15s; }
+.orbite1 { top: 90px; left: 90px; width: 120px; height: 120px; animation-duration: 5s; }
+.orbite2 { top: 55px; left: 55px; width: 190px; height: 190px; }
+.orbite3 { top: 15px; left: 15px; width: 270px; height: 270px; animation-duration: 15s; }
 
 @keyframes tourner {
   from { transform: rotate(0deg); }
@@ -132,12 +126,14 @@ footer {
   position: absolute;
   top: -8px;
   left: 50%;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
 }
 
-.planete1 { width: 14px; height: 14px; background-color: #d2691e; }
-.planete2 { width: 18px; height: 18px; background-color: #3aa0ff; }
-.planete3 { width: 22px; height: 22px; background-color: #e0b050; }
+.planete1 { background-color: chocolate; }
+.planete2 { background-color: dodgerblue; }
+.planete3 { background-color: goldenrod; }
 
 /* Étoiles qui scintillent */
 .etoile {
@@ -154,67 +150,44 @@ footer {
   to   { opacity: 1; }
 }
 
-/* Cartes CSS3 : coins arrondis, ombre portée et effet 3D */
+/* Cartes CSS3 : coins arrondis, ombre portée et effet 3D au survol */
 .cartes {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
 }
 
 .carte3d {
   width: 280px;
+  margin: 10px;
   padding: 15px;
   background-color: var(--carte);
   border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-  transform: perspective(600px) rotateY(-8deg);
-  transition: transform 0.4s;
+  box-shadow: 5px 5px 15px black;
+  transform: perspective(600px) rotateY(-10deg);
+  transition: transform 0.5s;
 }
 
 .carte3d:hover {
-  transform: perspective(600px) rotateY(0deg) scale(1.05);
+  transform: perspective(600px) rotateY(0deg);
 }
 
 .grand-bouton {
   display: block;
   margin: 30px auto;
-  font-size: 20px;
   padding: 15px 30px;
+  font-size: 20px;
 }
 
 /* ----- 2. Carte ----- */
 #map {
   height: 450px;
-  border-radius: 10px;
 }
 
 /* ----- 3. Drag & Drop ----- */
-.zone-depart {
-  min-height: 130px;
+.zone-depart, .zone {
   padding: 10px;
-  text-align: center;
-  background-color: #1b1f4b;
-  border: 2px dashed gray;
-  border-radius: 10px;
-}
-
-.zone-depart img, .zone img {
-  width: 90px;
-  margin: 5px;
-  cursor: grab;
-}
-
-.zones {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.zone {
-  flex: 1;
-  min-height: 200px;
-  padding: 10px;
+  margin-top: 15px;
   text-align: center;
   color: white;
   background-color: #1b1f4b;
@@ -222,41 +195,51 @@ footer {
   border-radius: 10px;
 }
 
+.zone-depart img, .zone img {
+  width: 90px;
+  margin: 5px;
+}
+
+.zones {
+  display: flex;
+}
+
+.zone {
+  flex: 1;
+  min-height: 200px;
+  margin: 15px 5px 0 5px;
+}
+
 .bon {
   color: limegreen;
-  font-weight: bold;
 }
 
 .faux {
   color: crimson;
-  font-weight: bold;
 }
 
 /* ----- 4. Quiz ----- */
 .question {
-  background-color: var(--carte);
-  padding: 10px 15px;
+  padding: 10px;
   margin-bottom: 10px;
+  background-color: var(--carte);
   border-radius: 10px;
 }
 
 .question label {
   display: block;
-  margin: 5px 0;
 }
 
 /* ----- 5. Pendu ----- */
 .jeu {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
   align-items: center;
 }
 
 #motCache {
   font-size: 30px;
-  letter-spacing: 5px;
-  color: #00e5ff;
+  color: deepskyblue;
 }
 
 #clavier {
@@ -267,7 +250,7 @@ footer {
   width: 40px;
 }
 
-/* ----- Fenêtre du profil ----- */
+/* ----- Fenêtre du profil (par-dessus toute la page) ----- */
 .fenetre {
   position: fixed;
   top: 0;
@@ -286,15 +269,9 @@ footer {
   border-radius: 15px;
 }
 
-.boite label {
+.boite label, .boite input {
   display: block;
   margin-bottom: 10px;
-}
-
-.boite input {
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
 }
 
 /* ----- Petits écrans ----- */
