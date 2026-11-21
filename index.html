@@ -4,221 +4,200 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cap sur l'Espace</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <!-- Bibliothèque Leaflet pour la carte (vue dans le TP6) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="starfield" id="starfield" aria-hidden="true"></div>
-  <div id="dim" aria-hidden="true"></div>
 
-  <!-- ============ EN-TÊTE ============ -->
-  <header class="topbar">
-    <a class="brand" href="#accueil" data-goto="accueil">🚀 <span>Cap sur l'Espace</span></a>
-    <nav id="nav" aria-label="Navigation principale">
-      <button type="button" data-view="accueil" class="active">Accueil</button>
-      <button type="button" data-view="carte">Carte</button>
-      <button type="button" data-view="classe">Classe le ciel</button>
-      <button type="button" data-view="mission">Mission</button>
-      <button type="button" data-view="pendu">Pendu</button>
-    </nav>
-    <div class="tools">
-      <label class="bright" title="Luminosité">☼
-        <input type="range" id="brightness" min="40" max="100" value="100" aria-label="Luminosité">
-      </label>
-      <button type="button" id="themeBtn" class="icon-btn" title="Mode sombre / clair" aria-label="Changer de thème">🌙</button>
-      <button type="button" id="profileBtn" class="icon-btn" title="Mon profil" aria-label="Modifier mon profil">👤</button>
-    </div>
-  </header>
-
-  <main>
-    <noscript><p class="card">Ce site a besoin de JavaScript pour fonctionner.</p></noscript>
-
-    <!-- ============ 1. ACCUEIL ============ -->
-    <section class="view" id="view-accueil">
-      <div class="hero">
-        <h1 class="neon">Explorons l'Univers</h1>
-        <p class="hero-sub">Bienvenue à bord, <strong id="helloPseudo">astronaute</strong> !</p>
-        <div class="orbits" aria-hidden="true">
-          <div class="sun"></div>
-          <div class="orbit o1"><span class="planet p1"></span></div>
-          <div class="orbit o2"><span class="planet p2"></span></div>
-          <div class="orbit o3"><span class="planet p3"><i class="ring"></i></span></div>
-        </div>
-      </div>
-
-      <div class="home-grid">
-        <article class="card card3d">
-          <h2>🪪 Fiche d'astronaute</h2>
-          <dl class="profile-list">
-            <dt>Prénom</dt><dd id="pPrenom">—</dd>
-            <dt>Nom</dt><dd id="pNom">—</dd>
-            <dt>Pseudo</dt><dd id="pPseudo">—</dd>
-            <dt>Âge</dt><dd id="pAge">—</dd>
-            <dt>Position</dt><dd id="pPos">non partagée</dd>
-          </dl>
-        </article>
-
-        <article class="card card3d">
-          <h2>🎬 Mission en images</h2>
-          <video id="missionVideo" controls preload="metadata" playsinline>
-            <source src="assets/mission.mp4" type="video/mp4">
-            Votre navigateur ne lit pas la vidéo.
-          </video>
-          <p id="videoHint" class="hint" hidden>Dépose ta vidéo dans <code>assets/mission.mp4</code> (lancement de fusée, ISS…).</p>
-        </article>
-
-        <article class="card card3d music">
-          <h2>🎵 Musique d'ambiance</h2>
-          <p class="hint">Style Vangelis — fichier attendu : <code>assets/vangelis.mp3</code></p>
-          <!-- Lecteur sans contrôles natifs : les boutons ci-dessous sont programmés en JavaScript -->
-          <audio id="musique" loop preload="metadata">
-            <source src="assets/vangelis.mp3" type="audio/mpeg">
-            Votre navigateur ne lit pas l'audio.
-          </audio>
-          <div class="player">
-            <button type="button" id="musicToggle" class="btn round" aria-label="Lecture / pause">▶</button>
-            <button type="button" id="musicStop" class="btn round" aria-label="Arrêter">⏹</button>
-            <button type="button" id="musicMute" class="btn round" aria-label="Couper le son">🔊</button>
-            <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5" aria-label="Volume">
-          </div>
-          <p id="musicStatus" class="hint">En pause</p>
-        </article>
-      </div>
-
-      <div class="center">
-        <button type="button" id="startBtn" class="btn cta" data-goto="carte">Commencer le voyage →</button>
-      </div>
-    </section>
-
-    <!-- ============ 2. CARTE ============ -->
-    <section class="view" id="view-carte" hidden>
-      <h2 class="title">🌍 Les lieux de la conquête spatiale</h2>
-      <p class="lead">Clique sur une fusée pour découvrir un site, ou sur un bouton ci-dessous.</p>
-      <div class="card map-card">
-        <div id="map" role="region" aria-label="Carte interactive"></div>
-        <div class="row">
-          <button type="button" id="geoBtn" class="btn">📍 Me localiser</button>
-          <span id="geoStatus" class="hint"></span>
-        </div>
-        <div id="siteList" class="chips"></div>
-      </div>
-    </section>
-
-    <!-- ============ 3. DRAG & DROP ============ -->
-    <section class="view" id="view-classe" hidden>
-      <h2 class="title">🪐 Classe le ciel</h2>
-      <p class="lead">Glisse chaque objet dans la bonne zone (sur mobile : touche l'objet, puis la zone).</p>
-      <!-- Les 6 images à faire glisser (draggable="true") -->
-      <div id="pool" class="pool" aria-label="Objets à classer">
-        <div class="obj" id="mars" draggable="true"><img src="assets/images/mars.svg" alt="Mars" draggable="false"><span>Mars</span></div>
-        <div class="obj" id="jupiter" draggable="true"><img src="assets/images/jupiter.svg" alt="Jupiter" draggable="false"><span>Jupiter</span></div>
-        <div class="obj" id="saturne" draggable="true"><img src="assets/images/saturne.svg" alt="Saturne" draggable="false"><span>Saturne</span></div>
-        <div class="obj" id="sirius" draggable="true"><img src="assets/images/sirius.svg" alt="Sirius" draggable="false"><span>Sirius</span></div>
-        <div class="obj" id="betelgeuse" draggable="true"><img src="assets/images/betelgeuse.svg" alt="Bételgeuse" draggable="false"><span>Bételgeuse</span></div>
-        <div class="obj" id="andromede" draggable="true"><img src="assets/images/andromede.svg" alt="Andromède" draggable="false"><span>Andromède</span></div>
-      </div>
-      <!-- Les deux zones de dépôt -->
-      <div class="zones">
-        <div class="zone" data-zone="solaire" tabindex="0" aria-label="Zone Système solaire">
-          <h3>☀️ Système solaire</h3>
-          <div class="drops"></div>
-        </div>
-        <div class="zone" data-zone="audela" tabindex="0" aria-label="Zone Au-delà">
-          <h3>🌌 Au-delà</h3>
-          <div class="drops"></div>
-        </div>
-      </div>
-      <p id="dndMsg" class="msg" role="status" aria-live="polite"></p>
-      <div class="row">
-        <span class="badge">Erreurs : <b id="dndErr">0</b></span>
-        <span class="badge">Classés : <b id="dndOk">0</b> / 6</span>
-        <button type="button" id="dndReset" class="btn ghost">🔄 Recommencer</button>
-      </div>
-    </section>
-
-    <!-- ============ 4. QUIZ ============ -->
-    <section class="view" id="view-mission" hidden>
-      <h2 class="title">🧑‍🚀 Mission Astronaute</h2>
-      <p class="lead">Réponds aux questions pour valider ta préparation de mission.</p>
-      <div class="card quiz">
-        <div class="quiz-top">
-          <span id="qCount" class="badge"></span>
-          <span id="qLast" class="badge"></span>
-        </div>
-        <div class="bar"><i id="qBar"></i></div>
-        <div id="qBody">
-          <h3 id="qText"></h3>
-          <div id="qOptions" class="options"></div>
-          <p id="qFeedback" class="msg" role="status" aria-live="polite"></p>
-          <button type="button" id="qNext" class="btn" hidden>Question suivante →</button>
-        </div>
-        <div id="qEnd" hidden>
-          <h3 id="qEndMsg"></h3>
-          <p id="qEndSub"></p>
-          <div class="row">
-            <button type="button" id="qRestart" class="btn">🔄 Refaire la mission</button>
-            <button type="button" class="btn ghost" data-goto="pendu">Jeu du pendu →</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ 5. PENDU ============ -->
-    <section class="view" id="view-pendu" hidden>
-      <h2 class="title">🔤 Le pendu de l'espace</h2>
-      <p class="lead">Devine le mot, lettre par lettre. Chaque erreur fait disparaître une partie de la fusée !</p>
-      <div class="card hangman">
-        <div class="rocket-box">
-          <svg id="rocket" viewBox="0 0 200 290" role="img" aria-label="Fusée qui se désassemble à chaque erreur">
-            <defs>
-              <linearGradient id="rkBody" x1="0" x2="1">
-                <stop offset="0" stop-color="#f1f4ff"/><stop offset="1" stop-color="#8d98c9"/>
-              </linearGradient>
-            </defs>
-            <rect x="30" y="274" width="140" height="8" rx="4" fill="#4a5388"/>
-            <path id="rk-1" d="M84 210 Q100 276 116 210 Z" fill="#ff9d2e"/>
-            <path id="rk-2" d="M72 150 L36 212 L72 200 Z" fill="#ff4d6d"/>
-            <path id="rk-3" d="M128 150 L164 212 L128 200 Z" fill="#ff4d6d"/>
-            <path id="rk-5" d="M70 80 H130 V200 Q130 212 118 212 H82 Q70 212 70 200 Z" fill="url(#rkBody)"/>
-            <circle id="rk-4" cx="100" cy="125" r="16" fill="#38bdf8" stroke="#1e293b" stroke-width="4"/>
-            <path id="rk-6" d="M70 80 Q100 -2 130 80 Z" fill="#ff4d6d"/>
-          </svg>
-        </div>
-        <div class="game">
-          <p class="stat">Erreurs restantes : <b id="hLeft">6</b> / 6</p>
-          <div id="hWord" class="word" aria-live="polite"></div>
-          <div id="hKeys" class="keys" aria-label="Clavier virtuel"></div>
-          <p id="hMsg" class="msg" role="status" aria-live="polite"></p>
-          <div class="row">
-            <button type="button" id="hReplay" class="btn">🔄 Rejouer</button>
-            <span id="hLast" class="badge"></span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">Cap sur l'Espace — projet pédagogique · HTML / CSS / JavaScript</footer>
-
-  <!-- ============ FENÊTRE DE PROFIL ============ -->
-  <!-- Fenêtre modale : un div affiché / masqué avec l'attribut hidden -->
-  <div id="profileDialog" class="modal" hidden>
-    <form id="profileForm" class="modal-box" novalidate>
-      <h2 id="profileTitle">👩‍🚀 Identification de l'astronaute</h2>
-      <p class="hint">Ces informations restent sur ton appareil (localStorage).</p>
-      <label>Prénom <input id="f-prenom" type="text" autocomplete="given-name" required maxlength="40"></label>
-      <label>Nom <input id="f-nom" type="text" autocomplete="family-name" required maxlength="40"></label>
-      <label>Pseudo <input id="f-pseudo" type="text" required maxlength="20"></label>
-      <label>Âge <input id="f-age" type="number" min="1" max="120" step="1" inputmode="numeric" required></label>
-      <p id="profileErr" class="msg bad" role="alert"></p>
-      <div class="row">
-        <button type="submit" class="btn">Décollage 🚀</button>
-        <button type="button" id="profileCancel" class="btn ghost">Annuler</button>
-      </div>
+  <!-- Fenêtre affichée au premier chargement -->
+  <div id="fenetreProfil" class="fenetre cache">
+    <form class="boite" onsubmit="enregistrerProfil(event)">
+      <h2>Bienvenue astronaute !</h2>
+      <label>Nom : <input type="text" id="nom"></label>
+      <label>Prénom : <input type="text" id="prenom"></label>
+      <label>Pseudo : <input type="text" id="pseudo"></label>
+      <label>Âge : <input type="number" id="age"></label>
+      <p id="erreurProfil" class="faux"></p>
+      <button type="submit">Valider</button>
     </form>
+  </div>
+
+  <!-- Tout le site (le filtre de luminosité s'applique à ce div) -->
+  <div id="site">
+
+    <header>
+      <h1>🚀 Cap sur l'Espace</h1>
+      <nav>
+        <button onclick="afficherPartie('accueil')">Accueil</button>
+        <button onclick="afficherPartie('carte')">Carte</button>
+        <button onclick="afficherPartie('classe')">Classe le ciel</button>
+        <button onclick="afficherPartie('mission')">Mission</button>
+        <button onclick="afficherPartie('pendu')">Pendu</button>
+      </nav>
+      <div class="reglages">
+        <button onclick="changerTheme()">Sombre / Clair</button>
+        <label>Luminosité <input type="range" id="luminosite" min="40" max="100" oninput="changerLuminosite()"></label>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ========== 1. ACCUEIL ========== -->
+      <section id="accueil" class="partie">
+        <h2 class="neon">Explorons l'Univers</h2>
+
+        <!-- Animation : planètes en orbite et étoiles qui scintillent -->
+        <div class="systeme">
+          <span class="etoile" style="top: 8%; left: 10%;"></span>
+          <span class="etoile" style="top: 20%; left: 85%;"></span>
+          <span class="etoile" style="top: 75%; left: 6%;"></span>
+          <span class="etoile" style="top: 88%; left: 70%;"></span>
+          <span class="etoile" style="top: 45%; left: 95%;"></span>
+          <span class="etoile" style="top: 5%; left: 55%;"></span>
+          <div class="soleil"></div>
+          <div class="orbite orbite1"><div class="planete planete1"></div></div>
+          <div class="orbite orbite2"><div class="planete planete2"></div></div>
+          <div class="orbite orbite3"><div class="planete planete3"></div></div>
+        </div>
+
+        <div class="cartes">
+          <div class="carte3d">
+            <h3>Mon profil</h3>
+            <p>Nom : <span id="infoNom"></span></p>
+            <p>Prénom : <span id="infoPrenom"></span></p>
+            <p>Pseudo : <span id="infoPseudo"></span></p>
+            <p>Âge : <span id="infoAge"></span> ans</p>
+          </div>
+
+          <div class="carte3d">
+            <h3>Mission en vidéo</h3>
+            <video controls width="100%">
+              <source src="assets/mission.mp4" type="video/mp4">
+              Votre navigateur ne supporte pas la vidéo.
+            </video>
+          </div>
+
+          <div class="carte3d">
+            <h3>Musique d'ambiance</h3>
+            <audio id="musique" loop>
+              <source src="assets/vangelis.mp3" type="audio/mpeg">
+            </audio>
+            <button onclick="lectureMusique()">Lecture</button>
+            <button onclick="pauseMusique()">Pause</button>
+            <button onclick="stopMusique()">Stop</button>
+            <p><label>Volume <input type="range" id="volume" min="0" max="1" step="0.1" oninput="changerVolume()"></label></p>
+          </div>
+        </div>
+
+        <button class="grand-bouton" onclick="afficherPartie('carte')">Commencer le voyage</button>
+      </section>
+
+      <!-- ========== 2. CARTE INTERACTIVE ========== -->
+      <section id="carte" class="partie cache">
+        <h2>Les lieux de l'espace</h2>
+        <p>Clique sur un marqueur pour découvrir le lieu.</p>
+        <button onclick="localiser()">Me localiser</button>
+        <p id="messagePosition"></p>
+        <div id="map"></div>
+      </section>
+
+      <!-- ========== 3. DRAG & DROP ========== -->
+      <section id="classe" class="partie cache">
+        <h2>Classe le ciel</h2>
+        <p>Glisse chaque image dans la bonne zone.</p>
+
+        <div class="zone-depart">
+          <img id="mars" src="assets/images/mars.svg" alt="Mars" draggable="true" ondragstart="drag(event)">
+          <img id="sirius" src="assets/images/sirius.svg" alt="Sirius" draggable="true" ondragstart="drag(event)">
+          <img id="jupiter" src="assets/images/jupiter.svg" alt="Jupiter" draggable="true" ondragstart="drag(event)">
+          <img id="andromede" src="assets/images/andromede.svg" alt="Andromède" draggable="true" ondragstart="drag(event)">
+          <img id="saturne" src="assets/images/saturne.svg" alt="Saturne" draggable="true" ondragstart="drag(event)">
+          <img id="betelgeuse" src="assets/images/betelgeuse.svg" alt="Bételgeuse" draggable="true" ondragstart="drag(event)">
+        </div>
+
+        <div class="zones">
+          <div id="solaire" class="zone" ondragover="allowDrop(event)" ondrop="drop(event)">
+            <h3>Système solaire</h3>
+          </div>
+          <div id="audela" class="zone" ondragover="allowDrop(event)" ondrop="drop(event)">
+            <h3>Au-delà</h3>
+          </div>
+        </div>
+        <p id="messageDnd"></p>
+      </section>
+
+      <!-- ========== 4. MISSION ASTRONAUTE (quiz) ========== -->
+      <section id="mission" class="partie cache">
+        <h2>Mission Astronaute</h2>
+        <p>Réponds aux questions pour préparer ta mission.</p>
+
+        <div class="question">
+          <p>1. Quelle est la planète la plus proche du Soleil ?</p>
+          <label><input type="radio" name="q1" value="faux"> Vénus</label>
+          <label><input type="radio" name="q1" value="vrai"> Mercure</label>
+          <label><input type="radio" name="q1" value="faux"> Mars</label>
+        </div>
+        <div class="question">
+          <p>2. Sur la Lune, la gravité est…</p>
+          <label><input type="radio" name="q2" value="vrai"> environ 6 fois plus faible que sur Terre</label>
+          <label><input type="radio" name="q2" value="faux"> plus forte que sur Terre</label>
+          <label><input type="radio" name="q2" value="faux"> la même que sur Terre</label>
+        </div>
+        <div class="question">
+          <p>3. Qui fut le premier humain dans l'espace en 1961 ?</p>
+          <label><input type="radio" name="q3" value="faux"> Neil Armstrong</label>
+          <label><input type="radio" name="q3" value="faux"> Thomas Pesquet</label>
+          <label><input type="radio" name="q3" value="vrai"> Youri Gagarine</label>
+        </div>
+        <div class="question">
+          <p>4. En quelle année Apollo 11 s'est-elle posée sur la Lune ?</p>
+          <label><input type="radio" name="q4" value="vrai"> 1969</label>
+          <label><input type="radio" name="q4" value="faux"> 1975</label>
+          <label><input type="radio" name="q4" value="faux"> 1959</label>
+        </div>
+        <div class="question">
+          <p>5. Quelle est la plus grosse planète du Système solaire ?</p>
+          <label><input type="radio" name="q5" value="faux"> Saturne</label>
+          <label><input type="radio" name="q5" value="vrai"> Jupiter</label>
+          <label><input type="radio" name="q5" value="faux"> La Terre</label>
+        </div>
+
+        <button onclick="validerMission()">Valider ma mission</button>
+        <p id="resultatMission"></p>
+      </section>
+
+      <!-- ========== 5. JEU DU PENDU ========== -->
+      <section id="pendu" class="partie cache">
+        <h2>Le pendu de l'espace</h2>
+        <p>À chaque erreur, une partie de la fusée disparaît !</p>
+
+        <div class="jeu">
+          <!-- Dessin de la fusée en SVG : 6 parties -->
+          <svg width="200" height="290" viewBox="0 0 200 290">
+            <rect x="30" y="274" width="140" height="8" fill="#4a5388"/>
+            <path id="partie1" d="M84 210 Q100 276 116 210 Z" fill="orange"/>
+            <path id="partie2" d="M72 150 L36 212 L72 200 Z" fill="crimson"/>
+            <path id="partie3" d="M128 150 L164 212 L128 200 Z" fill="crimson"/>
+            <rect id="partie4" x="70" y="80" width="60" height="132" fill="lightgray"/>
+            <circle id="partie5" cx="100" cy="125" r="16" fill="deepskyblue" stroke="#1e293b" stroke-width="4"/>
+            <path id="partie6" d="M70 80 Q100 -2 130 80 Z" fill="crimson"/>
+          </svg>
+
+          <div>
+            <p>Erreurs restantes : <span id="erreursRestantes">6</span></p>
+            <p id="motCache"></p>
+            <div id="clavier"></div>
+            <p id="messagePendu"></p>
+            <button onclick="nouvellePartie()">Rejouer</button>
+            <p id="dernierScore"></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>Cap sur l'Espace — Activité 2 — Web avancé</footer>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
