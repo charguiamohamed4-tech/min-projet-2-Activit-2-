@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,6 +73,11 @@
         <article class="card card3d music">
           <h2>🎵 Musique d'ambiance</h2>
           <p class="hint">Style Vangelis — fichier attendu : <code>assets/vangelis.mp3</code></p>
+          <!-- Lecteur sans contrôles natifs : les boutons ci-dessous sont programmés en JavaScript -->
+          <audio id="musique" loop preload="metadata">
+            <source src="assets/vangelis.mp3" type="audio/mpeg">
+            Votre navigateur ne lit pas l'audio.
+          </audio>
           <div class="player">
             <button type="button" id="musicToggle" class="btn round" aria-label="Lecture / pause">▶</button>
             <button type="button" id="musicStop" class="btn round" aria-label="Arrêter">⏹</button>
@@ -106,7 +111,16 @@
     <section class="view" id="view-classe" hidden>
       <h2 class="title">🪐 Classe le ciel</h2>
       <p class="lead">Glisse chaque objet dans la bonne zone (sur mobile : touche l'objet, puis la zone).</p>
-      <div id="pool" class="pool" aria-label="Objets à classer"></div>
+      <!-- Les 6 images à faire glisser (draggable="true") -->
+      <div id="pool" class="pool" aria-label="Objets à classer">
+        <div class="obj" id="mars" draggable="true"><img src="assets/images/mars.svg" alt="Mars" draggable="false"><span>Mars</span></div>
+        <div class="obj" id="jupiter" draggable="true"><img src="assets/images/jupiter.svg" alt="Jupiter" draggable="false"><span>Jupiter</span></div>
+        <div class="obj" id="saturne" draggable="true"><img src="assets/images/saturne.svg" alt="Saturne" draggable="false"><span>Saturne</span></div>
+        <div class="obj" id="sirius" draggable="true"><img src="assets/images/sirius.svg" alt="Sirius" draggable="false"><span>Sirius</span></div>
+        <div class="obj" id="betelgeuse" draggable="true"><img src="assets/images/betelgeuse.svg" alt="Bételgeuse" draggable="false"><span>Bételgeuse</span></div>
+        <div class="obj" id="andromede" draggable="true"><img src="assets/images/andromede.svg" alt="Andromède" draggable="false"><span>Andromède</span></div>
+      </div>
+      <!-- Les deux zones de dépôt -->
       <div class="zones">
         <div class="zone" data-zone="solaire" tabindex="0" aria-label="Zone Système solaire">
           <h3>☀️ Système solaire</h3>
@@ -190,8 +204,9 @@
   <footer class="footer">Cap sur l'Espace — projet pédagogique · HTML / CSS / JavaScript</footer>
 
   <!-- ============ FENÊTRE DE PROFIL ============ -->
-  <dialog id="profileDialog" aria-labelledby="profileTitle">
-    <form id="profileForm" novalidate>
+  <!-- Fenêtre modale : un div affiché / masqué avec l'attribut hidden -->
+  <div id="profileDialog" class="modal" hidden>
+    <form id="profileForm" class="modal-box" novalidate>
       <h2 id="profileTitle">👩‍🚀 Identification de l'astronaute</h2>
       <p class="hint">Ces informations restent sur ton appareil (localStorage).</p>
       <label>Prénom <input id="f-prenom" type="text" autocomplete="given-name" required maxlength="40"></label>
@@ -204,7 +219,7 @@
         <button type="button" id="profileCancel" class="btn ghost">Annuler</button>
       </div>
     </form>
-  </dialog>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="script.js"></script>

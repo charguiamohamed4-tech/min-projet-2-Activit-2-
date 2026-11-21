@@ -8,7 +8,9 @@ cap-sur-espace/
 ├── style.css         ← thèmes sombre/clair, animations, cartes 3D
 ├── script.js         ← toute la logique (sections numérotées 0 à 8)
 ├── README.md         ← ce fichier
+├── RAPPORT_CONFORMITE.md ← exigences / cours / vérifications
 └── assets/
+    ├── images/       ← 6 images SVG du Drag & Drop (mars, jupiter, saturne, sirius, betelgeuse, andromede)
     ├── mission.mp4   ← À AJOUTER : courte vidéo (fusée, ISS…)
     └── vangelis.mp3  ← À AJOUTER : musique d'ambiance
 ```
@@ -74,11 +76,12 @@ Le sujet annonce « 5 parties » mais n'en détaille que 4. Le texte de l'object
 |----------|-----|---------|
 | localStorage | `pseudo`, `nom`, `prenom`, `age` | identité saisie au 1ᵉʳ chargement |
 | localStorage | `volume` | de 0 à 1 |
-| localStorage | `position` | `{"lat":…, "lng":…}` si autorisée |
-| localStorage | `scorePendu` | `{"resultat":"gagné","erreurs":2,"mot":"LUNE","date":…}` |
+| localStorage | `position` | `"latitude,longitude"` si autorisée (ex. `36.8065,10.1815`) |
+| localStorage | `scorePendu` | texte, ex. `gagné (2 erreur(s)) — LUNE` |
 | localStorage | `theme` | `dark` ou `light` |
 | localStorage | `luminosite` | de 40 à 100 |
 | sessionStorage | `missionScore` | pourcentage du quiz |
+| sessionStorage | `missionDetail` | bonnes réponses, ex. `6/8` |
 
 Contrôle dans le navigateur : F12 → onglet *Application* → *Local storage / Session storage*.
 
@@ -95,13 +98,11 @@ Contrôle dans le navigateur : F12 → onglet *Application* → *Local storage /
 ## 6. Choix et points d'attention
 
 - **Soleil et comète** : le sujet les place parmi les « étoiles / autres objets », mais ils appartiennent au Système solaire — ils seraient faux dans la zone « Au-delà ». J'ai donc choisi **Sirius, Bételgeuse et la galaxie d'Andromède** pour « Au-delà ». À discuter avec ton enseignant si tu préfères suivre le texte à la lettre.
-- **Images du Drag & Drop** : dessinées en SVG dans `script.js` (aucun fichier à télécharger). Tu peux les remplacer par de vraies photos (NASA) dans le tableau `SVG`.
-- **Musique** : la musique de Vangelis est protégée par le droit d'auteur ; ajoute ton propre fichier `assets/vangelis.mp3` pour un usage scolaire. Sans fichier, une ambiance synthétique prend le relais pour que les boutons et le volume restent démontrables.
+- **Images du Drag & Drop** : 6 fichiers SVG originaux dans `assets/images/`, insérés avec des balises `<img>` dans `index.html`. Tu peux les remplacer par de vraies photos (NASA) en gardant les mêmes noms.
+- **Musique** : la musique de Vangelis est protégée par le droit d'auteur ; ajoute ton propre fichier `assets/vangelis.mp3` pour un usage scolaire. Sans fichier, le lecteur affiche « fichier introuvable ».
 - **Vidéo** : sans `assets/mission.mp4`, un message t'indique où la placer.
 - **Lancer le site** : utilise *Live Server* (ou `python -m http.server`) plutôt qu'un double-clic : la géolocalisation et certaines fonctions marchent mieux en `http://localhost`. La carte et la police ont besoin d'internet.
 
 ## 7. Pistes d'amélioration
 
-- Séparer `script.js` en plusieurs fichiers (`profil.js`, `carte.js`, `dnd.js`, `quiz.js`, `pendu.js`)
 - Ajouter un chronomètre au quiz, des niveaux de difficulté au pendu
-- Remplacer le Drag & Drop natif par les *Pointer Events* pour un glisser tactile

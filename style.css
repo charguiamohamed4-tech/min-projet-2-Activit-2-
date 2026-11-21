@@ -21,7 +21,8 @@
   --radius: 20px;
   --font-title: 'Orbitron', 'Trebuchet MS', system-ui, sans-serif;
 }
-[data-theme="light"] {
+/* Thème clair : la classe light-theme est ajoutée au <body> par JavaScript (classList) */
+body.light-theme {
   --bg: #eef2ff;
   --bg2: #d9e2ff;
   --card: rgba(255, 255, 255, .88);
@@ -59,8 +60,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1rem 3rem; position: r
 .row { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; margin-top: 1rem; }
 
 /* Fond étoilé (fixe, scintillant) */
-.starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; transition: opacity .4s; }
-[data-theme="light"] .starfield { opacity: 0; }
+.starfield { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none; transition: opacity .4s; }
+body.light-theme .starfield { opacity: 0; }
 .star {
   position: absolute; border-radius: 50%; background: #fff;
   box-shadow: 0 0 6px 1px rgba(255, 255, 255, .7);
@@ -69,7 +70,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1rem 3rem; position: r
 @keyframes twinkle { 0%, 100% { opacity: .15; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.25); } }
 
 /* Calque d'assombrissement (réglage de luminosité) */
-#dim { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 900; }
+#dim { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; opacity: 0; pointer-events: none; z-index: 900; }
 
 /* ---------- 3. En-tête ---------- */
 .topbar {
@@ -133,7 +134,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1rem 3rem; position: r
 .msg { min-height: 1.5em; margin: .9rem 0 0; font-weight: 600; }
 .msg.ok { color: var(--ok); }
 .msg.bad { color: var(--bad); }
-input[type="range"] { accent-color: var(--accent); cursor: pointer; }
+input[type="range"] { cursor: pointer; }
 
 /* ---------- 5. Accueil ---------- */
 .hero {
@@ -168,9 +169,9 @@ input[type="range"] { accent-color: var(--accent); cursor: pointer; }
 }
 
 /* Système solaire animé : planètes en orbite */
-.orbits { position: relative; width: min(100%, 340px); aspect-ratio: 1; margin: 0 auto; }
+.orbits { position: relative; width: 300px; height: 300px; max-width: 100%; margin: 0 auto; }
 .sun {
-  position: absolute; width: 18%; aspect-ratio: 1; left: 41%; top: 41%; border-radius: 50%;
+  position: absolute; width: 18%; height: 18%; left: 41%; top: 41%; border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #fff6b0, #ffb300 55%, #ff6a00);
   box-shadow: 0 0 30px 10px rgba(255, 170, 0, .55);
   animation: sunGlow 3s ease-in-out infinite alternate;
@@ -178,7 +179,7 @@ input[type="range"] { accent-color: var(--accent); cursor: pointer; }
 @keyframes sunGlow { to { box-shadow: 0 0 44px 16px rgba(255, 140, 0, .75); } }
 .orbit {
   position: absolute; border-radius: 50%; border: 1px dashed rgba(180, 195, 255, .3);
-  width: var(--d); aspect-ratio: 1;
+  width: var(--d); height: var(--d);
   left: calc(50% - var(--d) / 2); top: calc(50% - var(--d) / 2);
   animation: spin var(--t) linear infinite;
 }
@@ -196,14 +197,13 @@ input[type="range"] { accent-color: var(--accent); cursor: pointer; }
 .profile-list { display: grid; grid-template-columns: auto 1fr; gap: .45rem 1rem; margin: 0; }
 .profile-list dt { color: var(--muted); }
 .profile-list dd { margin: 0; font-weight: 600; word-break: break-word; }
-video { width: 100%; border-radius: 14px; background: #000; aspect-ratio: 16 / 9; }
+video { width: 100%; border-radius: 14px; background: #000; }
 .player { display: flex; align-items: center; gap: .6rem; margin-top: .6rem; }
 .player input[type="range"] { flex: 1; min-width: 60px; }
 
 /* ---------- 6. Carte ---------- */
-#map { height: min(520px, 62vh); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); z-index: 0; }
-[data-theme="dark"] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.8); }
-.rocket-pin { font-size: 24px; text-align: center; line-height: 30px; filter: drop-shadow(0 0 6px rgba(0, 229, 255, .8)); }
+#map { height: 62vh; max-height: 520px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); z-index: 0; }
+body:not(.light-theme) .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.8); }
 .leaflet-popup-content { font-family: system-ui, sans-serif; color: #12163a; }
 .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
 .chip {
@@ -224,7 +224,7 @@ video { width: 100%; border-radius: 14px; background: #000; aspect-ratio: 16 / 9
   transition: transform .2s, box-shadow .2s, background .2s;
 }
 .obj:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 10px 20px rgba(0, 0, 0, .3); }
-.obj svg { width: 72px; height: 72px; display: block; margin: 0 auto .3rem; pointer-events: none; }
+.obj img { width: 72px; height: 72px; display: block; margin: 0 auto .3rem; pointer-events: none; }
 .obj span { font-size: .85rem; font-weight: 600; pointer-events: none; }
 .obj.dragging { opacity: .4; }
 .obj.selected { outline: 3px solid var(--neon); box-shadow: 0 0 16px var(--neon); }
@@ -283,27 +283,30 @@ video { width: 100%; border-radius: 14px; background: #000; aspect-ratio: 16 / 9
 .key.miss { border-color: var(--bad); background: rgba(255, 92, 122, .25); opacity: 1; }
 
 /* ---------- 10. Fenêtre de profil ---------- */
-dialog {
-  width: min(92vw, 430px); border-radius: var(--radius); padding: 1.6rem;
+/* Fond sombre qui couvre toute la page ; la boîte est centrée avec Flexbox */
+.modal {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  background: rgba(2, 4, 20, .82); backdrop-filter: blur(4px);
+}
+.modal-box {
+  display: grid; gap: .9rem; width: 100%; max-width: 430px;
+  border-radius: var(--radius); padding: 1.6rem;
   border: 1px solid var(--border); background: var(--bg2); color: var(--text); box-shadow: var(--shadow);
 }
-dialog::backdrop { background: rgba(2, 4, 20, .82); backdrop-filter: blur(4px); }
-dialog form { display: grid; gap: .9rem; }
-dialog label { display: grid; gap: .3rem; font-weight: 600; font-size: .9rem; }
-dialog input {
+.modal-box label { display: grid; gap: .3rem; font-weight: 600; font-size: .9rem; }
+.modal-box input {
   font: inherit; padding: .65rem .8rem; border-radius: 10px; color: var(--text);
   border: 1px solid var(--border); background: rgba(124, 140, 255, .12);
 }
-dialog input:focus { outline: 2px solid var(--neon); }
+.modal-box input:focus { outline: 2px solid var(--neon); }
 
 /* ---------- 11. Responsive & accessibilité ---------- */
 :focus-visible { outline: 3px solid var(--neon); outline-offset: 2px; }
 @media (max-width: 720px) {
   .hangman { grid-template-columns: 1fr; }
   .rocket-box svg { max-height: 220px; }
+  .orbits { width: 240px; height: 240px; }
   .topbar { padding: .6rem .8rem; }
   .brand span { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
